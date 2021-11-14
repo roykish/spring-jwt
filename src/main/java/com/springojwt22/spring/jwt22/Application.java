@@ -17,28 +17,23 @@ import java.util.ArrayList;
 public class Application {
 
 
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
-	@Bean
-    CommandLineRunner run(ClientService clientService){
-		return args->{
-			clientService.saveRole(new Role(0,"ROLE_CLIENT"));
-			clientService.saveRole(new Role(0,"ROLE_ADMIN"));
+    @Bean
+    CommandLineRunner run(ClientService clientService) {
+        return args -> {
+            clientService.saveRole(new Role(0, "ROLE_CLIENT"));
+            clientService.saveRole(new Role(0, "ROLE_ADMIN"));
 
 
-			clientService.saveClient(new Client(0,"Kishor","kishor.dnj@gmail.com","roykish","1234",new ArrayList<>()));
-			clientService.saveClient(new Client(0,"Rahim","rahim.dnj@gmail.com","rahim","1234",new ArrayList<>()));
+            clientService.saveClient(new Client(0, "Kishor", "kishor.dnj@gmail.com", "roykish", "1234", new ArrayList<>()));
+            clientService.saveClient(new Client(0, "Rahim", "rahim.dnj@gmail.com", "rahim", "1234", new ArrayList<>()));
 
-			clientService.addRoleToClient("roykish","ROLE_ADMIN");
-			clientService.addRoleToClient("rahim","ROLE_CLIENT");
-		};
-	}
-	@Bean
-	BCryptPasswordEncoder passwordEncoder(){
-		return new BCryptPasswordEncoder();
-	}
-
+            clientService.addRoleToClient("roykish", "ROLE_ADMIN");
+            clientService.addRoleToClient("rahim", "ROLE_CLIENT");
+        };
+    }
 
 }

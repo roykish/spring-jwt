@@ -28,13 +28,13 @@ public class ClientController {
         return ResponseEntity.ok().body(clientService.getClient(clientUsername));
     }
 
-    @PostMapping("/add/client")
+    @PostMapping("/save/client")
     public ResponseEntity<Client> addClient(@RequestBody Client client) {
         System.out.println("Called!!!");
         return ResponseEntity.ok().body(clientService.saveClient(client));
     }
 
-    @PostMapping("/add/role")
+    @PostMapping("/save/role")
     public ResponseEntity<Role> addRole(@RequestBody Role role) {
         return ResponseEntity.ok().body(clientService.saveRole(role));
     }

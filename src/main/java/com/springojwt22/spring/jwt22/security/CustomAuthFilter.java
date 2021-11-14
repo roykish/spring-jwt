@@ -3,6 +3,7 @@ package com.springojwt22.spring.jwt22.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,14 +19,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class CustomerAuthFilter extends UsernamePasswordAuthenticationFilter {
+public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
 
-    public CustomerAuthFilter(AuthenticationManager authenticationManager) {
+    public CustomAuthFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
@@ -56,7 +60,12 @@ public class CustomerAuthFilter extends UsernamePasswordAuthenticationFilter {
                 .withIssuer(request.getRequestURI().toString())
                 .sign(algorithms);
 
-        response.setHeader("access_token", access_token);
-        response.setHeader("refresh_token", refresh_token);
+//        response.setHeader("access_token", access_token);
+//        response.setHeader("refresh_token", refresh_token);
+        Map<String, String> responseMsg = new HashMap<String, String>();
+        responseMsg.put("access_token",access_token);
+        responseMsg.put("refresh_token",refresh_token);
+        response.setContentType("APPLICATION_JSON_VALUE");
+        new ObjectMapper().writeValue(response.getOutputStream(),responseMsg);
     }
 }

@@ -1,9 +1,10 @@
 package com.springojwt22.spring.jwt22.security;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -20,8 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
-//    private final PasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncodeConfig passwordEncodeConfig;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -32,8 +33,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+ //       http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/user/**").hasAnyAuthority("ROLE_CLIENT");
+   //     http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
+   //     http.authorizeRequests().antMatchers(HttpMethod.POST,"api/")
         http.authorizeRequests().anyRequest().permitAll();
-        http.addFilter(new CustomerAuthFilter(authenticationManagerBean()));
+        http.addFilter(new CustomAuthFilter(authenticationManagerBean()));
     }
 
     @Bean

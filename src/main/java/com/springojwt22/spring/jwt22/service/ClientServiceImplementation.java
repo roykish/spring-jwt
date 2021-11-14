@@ -27,7 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class ClientServiceImplementation implements ClientService,UserDetailsService {
+public class ClientServiceImplementation implements ClientService, UserDetailsService {
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
