@@ -25,14 +25,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
+public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
 
-    public CustomAuthFilter(AuthenticationManager authenticationManager) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
+    //take username & password from the client and add token to the authenticated client
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String username = request.getParameter("username");
@@ -43,6 +44,7 @@ public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
         return authenticationManager.authenticate(authenticationToken);
     }
 
+    //using oauth0 token algorithm and assign permission with the token and generate access token and refresh token
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         User successfullyAuthenticatedClint = (User) authentication.getPrincipal();
@@ -62,10 +64,14 @@ public class CustomAuthFilter extends UsernamePasswordAuthenticationFilter {
 
 //        response.setHeader("access_token", access_token);
 //        response.setHeader("refresh_token", refresh_token);
+
+        //mapping both token
         Map<String, String> responseMsg = new HashMap<String, String>();
         responseMsg.put("access_token",access_token);
         responseMsg.put("refresh_token",refresh_token);
         response.setContentType("APPLICATION_JSON_VALUE");
+
+        //creating an Object and insert the tokens to show as an object json.
         new ObjectMapper().writeValue(response.getOutputStream(),responseMsg);
     }
 }

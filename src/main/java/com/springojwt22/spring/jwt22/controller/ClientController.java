@@ -18,28 +18,40 @@ public class ClientController {
     @Autowired
     private ClientService clientService;
 
-    @GetMapping("/display")
+    //API to show all the client by the client/admin
+    @GetMapping("/client")
     public ResponseEntity<List<Client>> displayAllClient() {
         return ResponseEntity.ok().body(clientService.getClient());
     }
 
-    @GetMapping("display/{clientUsername}")
+    //API to show the client by username by the client/admin
+    @GetMapping("client/{clientUsername}")
     public ResponseEntity<Client> showByUsername(@PathVariable String clientUsername) {
         return ResponseEntity.ok().body(clientService.getClient(clientUsername));
     }
 
-    @PostMapping("/save/client")
+    //API to save a client only by the client
+    @PostMapping("client/save")
     public ResponseEntity<Client> addClient(@RequestBody Client client) {
         System.out.println("Called!!!");
         return ResponseEntity.ok().body(clientService.saveClient(client));
     }
 
-    @PostMapping("/save/role")
+    //API to approve a client only by the admin
+    @PostMapping("client/approve")
+    public ResponseEntity<Client> approveClient(@RequestBody Client client) {
+        System.out.println("Called!!!");
+        return ResponseEntity.ok().body(clientService.saveClient(client));
+    }
+
+    //API to save roles only by the admin
+    @PostMapping("client/save/role")
     public ResponseEntity<Role> addRole(@RequestBody Role role) {
         return ResponseEntity.ok().body(clientService.saveRole(role));
     }
 
-    @PostMapping("/assign/role")
+    //API to assign role to the client only by the admin
+    @PostMapping("client/assign/role")
     public ResponseEntity<?> assignRole(@RequestBody RoleToClient assign) {
         clientService.addRoleToClient(assign.getClientUsername(), assign.getRoleName());
         return ResponseEntity.ok().build();

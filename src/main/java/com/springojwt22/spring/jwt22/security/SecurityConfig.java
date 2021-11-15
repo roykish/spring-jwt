@@ -31,13 +31,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
+        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
- //       http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/user/**").hasAnyAuthority("ROLE_CLIENT");
-   //     http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
-   //     http.authorizeRequests().antMatchers(HttpMethod.POST,"api/")
+        http.authorizeRequests().antMatchers("/api/login/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/client/**").hasAnyAuthority("ROLE_CLIENT");
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/client/save/**").hasAnyAuthority("ROLE_CLIENT");
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/client/approve/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.POST,"/api/client/assign/**").hasAnyAuthority("ROLE_ADMIN");
+//        http.authorizeRequests().antMatchers(HttpMethod.POST,"api/")
         http.authorizeRequests().anyRequest().permitAll();
-        http.addFilter(new CustomAuthFilter(authenticationManagerBean()));
+        http.addFilter( customAuthenticationFilter);
     }
 
     @Bean
